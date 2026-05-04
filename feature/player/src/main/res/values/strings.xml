@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unknown">Unknown</string>
+    <string name="unknown_artist">Unknown Artist</string>
+    <string name="unknown_track">Unknown Track</string>
+    <string name="no_album_art">No Album Art</string>
+    <string name="next">Next</string>
+    <string name="repeat">Repeat</string>
+    <string name="error_loading_song">Error loading song</string>
+    <string name="error_playback">Unable to play audio. Please check your connection.</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
+    <string name="back">Back</string>
+    <string name="now_playing">Now playing</string>
+    <string name="menu">Menu</string>
+    <string name="chevron">Chevron</string>
+    <string name="view_album">View album</string>
+    <string name="previous">Previous</string>
+</resources>

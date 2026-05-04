@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="categories">Categories</string>
+    <string name="add_category">Add Category</string>
+    <string name="error_loading_categories">Error loading categories</string>
+    <string name="add_new_category">Add New Category</string>
+    <string name="category_name">Category Name</string>
+    <string name="select_a_color">Select a Color</string>
+    <string name="add">Add</string>
+    <string name="edit_category">Edit category</string>
+    <string name="update">Update</string>
+    <string name="songs">Songs</string>
+    <string name="search_your_library">Search your library</string>
+    <string name="unknown">Unknown</string>
+    <string name="unknown_artist">Unknown Artist</string>
+    <string name="error_loading_album">Error loading album</string>
+    <string name="error_loading_songs">Error loading songs</string>
+    <string name="error_loading_more">Error loading more</string>
+    <string name="back">Back</string>
+    <string name="album">Album</string>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Songs</string>
+    <string name="menu">Menu</string>
+    <string name="playing">Playing</string>
+    <string name="chevron">Chevron</string>
+    <string name="back">Back</string>
+    <string name="album_cover">Album Cover</string>
+    <string name="view_album">View album</string>
+</resources>

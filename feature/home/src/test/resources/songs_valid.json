@@ -1,0 +1,21 @@
+{
+  "resultCount": 2,
+  "results": [
+    {
+      "wrapperType": "track",
+      "kind": "song",
+      "trackId": 1,
+      "artistName": "Sample Artist",
+      "trackName": "Sample Song",
+      "collectionId": 123
+    },
+    {
+      "wrapperType": "track",
+      "kind": "song",
+      "trackId": 2,
+      "artistName": "Another Artist",
+      "trackName": "Another Song",
+      "collectionId": 124
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Two-path morph: play → pause.
+
+  LEFT path:
+    Play  (triangle):  M 5,3  L 5,3   L 20,12 L 5,21  Z
+    Pause (left bar):  M 5,3  L 9,3   L 9,21  L 5,21  Z
+
+  RIGHT path:
+    Play  (invisible): M 20,12 L 20,12 L 20,12 L 20,12 Z
+    Pause (right bar): M 13,3  L 17,3  L 17,21 L 13,21 Z
+
+  Both pairs: M + 3×L + Z — identical structure for clean morphing.
+-->
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <!-- Play state: triangle; morphs to left pause bar -->
+            <path
+                android:name="icon_left"
+                android:fillColor="#FFFFFF"
+                android:pathData="M 5,3 L 5,3 L 20,12 L 5,21 Z"/>
+            <!-- Play state: invisible tip; morphs to right pause bar -->
+            <path
+                android:name="icon_right"
+                android:fillColor="#FFFFFF"
+                android:pathData="M 20,12 L 20,12 L 20,12 L 20,12 Z"/>
+        </vector>
+    </aapt:attr>
+
+    <!-- Left: triangle → left bar -->
+    <target android:name="icon_left">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="300"
+                android:propertyName="pathData"
+                android:valueFrom="M 5,3 L 5,3 L 20,12 L 5,21 Z"
+                android:valueTo="M 5,3 L 9,3 L 9,21 L 5,21 Z"
+                android:valueType="pathType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+
+    <!-- Right: invisible tip → right bar -->
+    <target android:name="icon_right">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="300"
+                android:propertyName="pathData"
+                android:valueFrom="M 20,12 L 20,12 L 20,12 L 20,12 Z"
+                android:valueTo="M 13,3 L 17,3 L 17,21 L 13,21 Z"
+                android:valueType="pathType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+
+</animated-vector>

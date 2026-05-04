@@ -1,0 +1,6 @@
+# Build output
+build/
+
+# Generated code (KSP / Room / Hilt)
+build/generated/
+build/kspCaches/
