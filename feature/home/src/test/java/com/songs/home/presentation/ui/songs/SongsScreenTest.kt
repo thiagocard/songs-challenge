@@ -105,24 +105,19 @@ class SongsScreenTest {
     }
 
     @Test
-    fun `song click navigates to player with loaded playlist ids and current track`() {
-        var navigatedTrackId: Long? = null
-        var navigatedTrackIds: List<Long> = emptyList()
+    fun `song click forwards selected song`() {
+        var clickedSong: Song? = null
 
         composeTestRule.setSongsScreenContent(
             pagingDataFlow = successPagingFlow(items = songs),
-            onNavigateToPlayer = { trackIds, currentTrackId ->
-                navigatedTrackIds = trackIds
-                navigatedTrackId = currentTrackId
-            },
+            onSongClick = { clickedSong = it },
         )
         composeTestRule.awaitPagingIdle()
         composeTestRule.waitUntilNodeWithTextExists("Second Song")
 
         composeTestRule.onNodeWithText("Second Song", useUnmergedTree = true).performClick()
 
-        assertEquals(2L, navigatedTrackId)
-        assertEquals(listOf(1L, 2L, 3L), navigatedTrackIds)
+        assertEquals(2L, clickedSong?.trackId)
     }
 
     @Test
@@ -238,27 +233,23 @@ class SongsScreenTest {
         composeTestRule.onAllNodesWithContentDescription("Menu", useUnmergedTree = true)[0].performClick()
         composeTestRule.onNodeWithText("View album").performClick()
 
-        assertNull(navigatedAlbumId)    }
+        assertNull(navigatedAlbumId)
+    }
 
     @Test
-    fun `clicking first song sends correct trackId and full playlist`() {
-        var navigatedTrackId: Long? = null
-        var navigatedTrackIds: List<Long> = emptyList()
+    fun `clicking first song forwards first song`() {
+        var clickedSong: Song? = null
 
         composeTestRule.setSongsScreenContent(
             pagingDataFlow = successPagingFlow(items = songs),
-            onNavigateToPlayer = { trackIds, currentTrackId ->
-                navigatedTrackIds = trackIds
-                navigatedTrackId = currentTrackId
-            },
+            onSongClick = { clickedSong = it },
         )
         composeTestRule.awaitPagingIdle()
         composeTestRule.waitUntilNodeWithTextExists("First Song")
 
         composeTestRule.onNodeWithText("First Song", useUnmergedTree = true).performClick()
 
-        assertEquals(1L, navigatedTrackId)
-        assertEquals(listOf(1L, 2L, 3L), navigatedTrackIds)
+        assertEquals(1L, clickedSong?.trackId)
     }
 }
 
@@ -269,7 +260,7 @@ private fun ComposeContentTestRule.setSongsScreenContent(
     onSearchTermChanged: (String) -> Unit = {},
     onResetToDefault: () -> Unit = {},
     onNavigateToAlbum: (String) -> Unit = {},
-    onNavigateToPlayer: (trackIds: List<Long>, currentTrackId: Long) -> Unit = { _, _ -> },
+    onSongClick: (Song) -> Unit = {},
 ) {
     setContent {
         CompositionLocalProvider(LocalInspectionMode provides true) {
@@ -281,7 +272,7 @@ private fun ComposeContentTestRule.setSongsScreenContent(
                     onSearchTermChanged = onSearchTermChanged,
                     onResetToDefault = onResetToDefault,
                     onNavigateToAlbum = onNavigateToAlbum,
-                    onNavigateToPlayer = onNavigateToPlayer,
+                    onSongClick = onSongClick,
                 )
             }
         }

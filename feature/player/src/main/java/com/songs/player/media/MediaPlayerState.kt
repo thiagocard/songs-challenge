@@ -9,4 +9,5 @@ data class MediaPlayerState(
     val artworkUrl: String? = null,
     /** The trackId of the media item currently loaded into the player, or null if nothing is loaded. */
     val currentTrackId: Long? = null,
+    val trackIds: List<Long> = emptyList(),
 )

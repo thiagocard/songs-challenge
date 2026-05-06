@@ -51,8 +51,10 @@ import com.songs.core.ui.transition.LocalSharedTransitionScope
 import com.songs.feature.home.R
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.songs.core.ui.util.isLargeScreen
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,7 +64,8 @@ internal fun SongsScreen(
     onSearchTermChanged: (String) -> Unit,
     onResetToDefault: () -> Unit,
     onNavigateToAlbum: (String) -> Unit,
-    onNavigateToPlayer: (trackIds: List<Long>, currentTrackId: Long) -> Unit,
+    onSongClick: (Song) -> Unit,
+    nowPlayingTrackId: Long? = null,
 ) {
     var searchTextFieldValue by remember { mutableStateOf(TextFieldValue(searchTerm)) }
     var isSearchActive by remember { mutableStateOf(false) }
@@ -85,6 +88,21 @@ internal fun SongsScreen(
     var showHeader by remember { mutableStateOf(true) }
     val listState = rememberLazyListState()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    // When returning from the player, ensure the currently-playing row is composed so the
+    // reverse shared-element transition can target it (even if the user changed tracks).
+    LaunchedEffect(nowPlayingTrackId, isSearchActive, pagingItems.itemCount) {
+        val trackId = nowPlayingTrackId ?: return@LaunchedEffect
+        if (isSearchActive) return@LaunchedEffect
+
+        // Paging may still be loading; only scroll when we can resolve an index.
+        val index = pagingItems.itemSnapshotList.items.indexOfFirst { it?.trackId == trackId }
+        if (index >= 0) {
+            withContext(Dispatchers.Main.immediate) {
+                listState.scrollToItem(index)
+            }
+        }
+    }
 
     // Show append errors (load-more failures) as a snackbar.
     LaunchedEffect(pagingItems.loadState) {
@@ -212,13 +230,7 @@ internal fun SongsScreen(
                                         }
 
                                     },
-                                    onClick = {
-                                        // Create a virtual playlist of the currently loaded songs
-                                        // (up to 15 for performance) and navigate to player
-                                        val allTrackIds = (0 until minOf(15, pagingItems.itemCount))
-                                            .mapNotNull { pagingItems.peek(it)?.trackId }
-                                        onNavigateToPlayer(allTrackIds, song.trackId ?: 0L)
-                                    }
+                                    onClick = { onSongClick(song) }
                                 )
                             }
                             if (isAppendLoading) {

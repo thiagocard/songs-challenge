@@ -7,6 +7,7 @@ import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isTrue
 import assertk.assertions.isEqualTo
+import com.songs.player.FakeNowPlayingProvider
 import com.songs.player.TestCoroutineRule
 import com.songs.player.domain.usecase.GetTrackByIdUseCase
 import com.songs.player.media.MediaPlayerState
@@ -30,6 +31,7 @@ class PlayerViewModelTest {
     private lateinit var getTrackByIdUseCase: GetTrackByIdUseCase
     private lateinit var fakeMediaPlayer: FakeMediaPlayer
     private lateinit var viewModel: PlayerViewModel
+    private lateinit var nowPlayingProvider: FakeNowPlayingProvider
 
     private val track1 = TrackMock.track.copy(trackId = 1L, trackName = "Track 1", previewUrl = "https://preview1.url")
     private val track2 = TrackMock.track.copy(trackId = 2L, trackName = "Track 2", previewUrl = "https://preview2.url")
@@ -39,10 +41,12 @@ class PlayerViewModelTest {
     fun setUp() {
         getTrackByIdUseCase = mockk()
         fakeMediaPlayer = FakeMediaPlayer()
+        nowPlayingProvider = FakeNowPlayingProvider()
         coEvery { getTrackByIdUseCase(any()) } returns flowOf(emptyList())
     }
 
-    private fun createViewModel() = PlayerViewModel(getTrackByIdUseCase, fakeMediaPlayer)
+    private fun createViewModel() =
+        PlayerViewModel(getTrackByIdUseCase, fakeMediaPlayer, nowPlayingProvider)
 
     @Test
     fun `loadTrack with trackId=0 sets PlaylistUiState Error`() = runTest(coroutineRule.dispatcher) {
@@ -82,7 +86,7 @@ class PlayerViewModelTest {
     }
 
     @Test
-    fun `loadTrack with single track emits Success with empty playlist`() = runTest(coroutineRule.dispatcher) {
+    fun `loadTrack with single track emits Success with current track playlist`() = runTest(coroutineRule.dispatcher) {
         coEvery { getTrackByIdUseCase("1") } returns flowOf(listOf(track1))
         viewModel = createViewModel()
 
@@ -93,7 +97,7 @@ class PlayerViewModelTest {
         viewModel.playlistUiState.test {
             val state = awaitItem()
             assertThat(state).isInstanceOf(PlaylistUiState.Success::class)
-            assertThat((state as PlaylistUiState.Success).playableTracks).hasSize(0)
+            assertThat((state as PlaylistUiState.Success).playableTracks).hasSize(1)
             cancelAndIgnoreRemainingEvents()
         }
     }

@@ -13,6 +13,7 @@ interface MediaPlayer {
         title: String? = null,
         artist: String? = null,
         artworkUri: String? = null,
+        trackIds: List<Long> = emptyList(),
     )
 
     fun play()

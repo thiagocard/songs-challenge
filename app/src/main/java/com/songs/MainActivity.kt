@@ -5,15 +5,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation3.runtime.NavKey
 import com.songs.core.ui.theme.SongsTheme
 import com.songs.navigation.NavigationGraph
+import com.songs.navigation.route.SplashRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
-
         super.onCreate(savedInstanceState)
         setContent {
             SongsApp()
@@ -22,8 +24,8 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun SongsApp() {
+fun SongsApp(initialRoute: NavKey = SplashRoute) {
     SongsTheme {
-        NavigationGraph()
+        NavigationGraph(startKey = initialRoute)
     }
 }

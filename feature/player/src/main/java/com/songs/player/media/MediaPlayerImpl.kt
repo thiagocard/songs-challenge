@@ -101,6 +101,7 @@ class MediaPlayerImpl(
         title: String?,
         artist: String?,
         artworkUri: String?,
+        trackIds: List<Long>,
     ) {
         val metadata = MediaMetadata.Builder()
             .setTitle(title)
@@ -110,6 +111,7 @@ class MediaPlayerImpl(
             }
             .build()
         val mediaItem = MediaItem.Builder()
+            .apply { trackId?.toString()?.let(::setMediaId) }
             .setUri(url)
             .setMediaMetadata(metadata)
             .build()
@@ -120,6 +122,7 @@ class MediaPlayerImpl(
             artistName = artist,
             artworkUrl = artworkUri,
             currentTrackId = trackId,
+            trackIds = trackIds,
         )
     }
 

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = AlbumViewModel.Factory::class)
-class AlbumViewModel @AssistedInject constructor(
+internal class AlbumViewModel @AssistedInject constructor(
     private val getSongsByAlbumUseCase: GetSongsByAlbumUseCase,
     @Assisted private val albumId: String,
 ) : ViewModel() {

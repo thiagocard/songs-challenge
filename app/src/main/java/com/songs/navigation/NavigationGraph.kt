@@ -10,29 +10,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.songs.core.ui.transition.LocalSharedTransitionScope
-import com.songs.home.navigation.albumScreen
-import com.songs.home.navigation.songsScreen
+import com.songs.home.navigation.albumRoute
+import com.songs.home.navigation.songsRoute
 import com.songs.navigation.route.AlbumRoute
 import com.songs.navigation.route.HomeRoute
 import com.songs.navigation.route.PlayerRoute
 import com.songs.navigation.route.SplashRoute
 import com.songs.player.miniplayer.MiniPlayer
 import com.songs.player.miniplayer.MiniPlayerViewModel
-import com.songs.player.navigation.playerScreen
+import com.songs.player.navigation.playerRoute
 import com.songs.splash.presentation.screens.SplashScreen
 
 @Composable
-fun NavigationGraph() {
-    val backStack = rememberNavBackStack(SplashRoute)
+fun NavigationGraph(
+    startKey: NavKey = SplashRoute,
+) {
+    val backStack = rememberNavBackStack(startKey)
     val miniPlayerViewModel: MiniPlayerViewModel = hiltViewModel()
     val isPlayerVisible = backStack.any { it is PlayerRoute }
 
-    fun navigateToPlayer(trackIds: List<Long>, currentTrackId: Long) {
-        val playerRoute = PlayerRoute(trackIds, currentTrackId, shouldPlay = true)
+    fun navigateToPlayer(trackIds: List<Long>, currentTrackId: Long, shouldPlay: Boolean = true) {
+        val playerRoute = PlayerRoute(trackIds, currentTrackId, shouldPlay)
         val existingIndex = backStack.indexOfFirst { it is PlayerRoute }
         if (existingIndex >= 0) backStack.removeAt(existingIndex)
         backStack.add(playerRoute)
@@ -40,7 +43,7 @@ fun NavigationGraph() {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        // Tell Scaffold not to apply window insets itself — each screen manages its own top insets.
+        // Tell Scaffold not to apply window insets itself — each screen manages its own insets.
         contentWindowInsets = WindowInsets(),
         // MiniPlayer lives here so Compose automatically reserves its height as
         // bottom padding for all screen content — no screen can render behind it.
@@ -70,22 +73,22 @@ fun NavigationGraph() {
                                 }
                             )
                         }
-                        songsScreen(
+                        songsRoute(
                             onNavigateToAlbum = { albumId -> backStack.add(AlbumRoute(albumId)) },
                             onNavigateToPlayer = ::navigateToPlayer,
                         )
-                        albumScreen(
+                        albumRoute(
                             onNavigateUp = { backStack.removeLastOrNull() },
                             onNavigateToPlayer = ::navigateToPlayer
                         )
-                        playerScreen(
+                        playerRoute(
                             onNavigateUp = { backStack.removeLastOrNull() },
                             onNavigateToAlbum = { albumId -> backStack.add(AlbumRoute(albumId)) },
-                            onRouteChanged = miniPlayerViewModel::updatePlayerRoute,
+                            onNavigateToPlayer = ::navigateToPlayer
                         )
                     }
                 )
-            } // CompositionLocalProvider
-        } // SharedTransitionLayout
+            }
+        }
     }
 }

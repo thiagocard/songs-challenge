@@ -1,4 +1,6 @@
 package com.songs.home.presentation.ui.album
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasProgressBarRangeInfo
@@ -46,12 +48,14 @@ class AlbumScreenTest {
     @Test
     fun `shows LoadingScreen when state is Loading`() {
         composeTestRule.setContent {
-            SongsTheme {
-                AlbumScreen(
-                    uiState = AlbumUiState.Loading,
-                    onNavigateUp = {},
-                    onNavigateToPlayer = { _, _ -> },
-                )
+            CompositionLocalProvider(LocalInspectionMode provides true) {
+                SongsTheme {
+                    AlbumScreen(
+                        uiState = AlbumUiState.Loading,
+                        onNavigateUp = {},
+                        onNavigateToPlayer = { _, _ -> },
+                    )
+                }
             }
         }
 
@@ -63,12 +67,14 @@ class AlbumScreenTest {
     @Test
     fun `shows error message when state is Error`() {
         composeTestRule.setContent {
-            SongsTheme {
-                AlbumScreen(
-                    uiState = AlbumUiState.Error,
-                    onNavigateUp = {},
-                    onNavigateToPlayer = { _, _ -> },
-                )
+            CompositionLocalProvider(LocalInspectionMode provides true) {
+                SongsTheme {
+                    AlbumScreen(
+                        uiState = AlbumUiState.Error,
+                        onNavigateUp = {},
+                        onNavigateToPlayer = { _, _ -> },
+                    )
+                }
             }
         }
 
@@ -78,12 +84,14 @@ class AlbumScreenTest {
     @Test
     fun `shows album title and artist in Success state`() {
         composeTestRule.setContent {
-            SongsTheme {
-                AlbumScreen(
-                    uiState = successState,
-                    onNavigateUp = {},
-                    onNavigateToPlayer = { _, _ -> },
-                )
+            CompositionLocalProvider(LocalInspectionMode provides true) {
+                SongsTheme {
+                    AlbumScreen(
+                        uiState = successState,
+                        onNavigateUp = {},
+                        onNavigateToPlayer = { _, _ -> },
+                    )
+                }
             }
         }
 
@@ -94,12 +102,14 @@ class AlbumScreenTest {
     @Test
     fun `shows correct number of song items in Success state`() {
         composeTestRule.setContent {
-            SongsTheme {
-                AlbumScreen(
-                    uiState = successState,
-                    onNavigateUp = {},
-                    onNavigateToPlayer = { _, _ -> },
-                )
+            CompositionLocalProvider(LocalInspectionMode provides true) {
+                SongsTheme {
+                    AlbumScreen(
+                        uiState = successState,
+                        onNavigateUp = {},
+                        onNavigateToPlayer = { _, _ -> },
+                    )
+                }
             }
         }
 
@@ -112,12 +122,14 @@ class AlbumScreenTest {
     fun `clicking a song triggers onNavigateToPlayer with correct trackId`() {
         var navigatedTrackId: Long? = null
         composeTestRule.setContent {
-            SongsTheme {
-                AlbumScreen(
-                    uiState = successState,
-                    onNavigateUp = {},
-                    onNavigateToPlayer = { _, currentTrackId -> navigatedTrackId = currentTrackId },
-                )
+            CompositionLocalProvider(LocalInspectionMode provides true) {
+                SongsTheme {
+                    AlbumScreen(
+                        uiState = successState,
+                        onNavigateUp = {},
+                        onNavigateToPlayer = { _, currentTrackId -> navigatedTrackId = currentTrackId },
+                    )
+                }
             }
         }
 
@@ -129,12 +141,14 @@ class AlbumScreenTest {
     fun `tapping back calls onNavigateUp`() {
         var navigatedUp = false
         composeTestRule.setContent {
-            SongsTheme {
-                AlbumScreen(
-                    uiState = successState,
-                    onNavigateUp = { navigatedUp = true },
-                    onNavigateToPlayer = { _, _ -> },
-                )
+            CompositionLocalProvider(LocalInspectionMode provides true) {
+                SongsTheme {
+                    AlbumScreen(
+                        uiState = successState,
+                        onNavigateUp = { navigatedUp = true },
+                        onNavigateToPlayer = { _, _ -> },
+                    )
+                }
             }
         }
 

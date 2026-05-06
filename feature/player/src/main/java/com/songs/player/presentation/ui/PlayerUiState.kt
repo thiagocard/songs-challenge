@@ -2,7 +2,7 @@ package com.songs.player.presentation.ui
 
 import com.songs.player.domain.model.Track
 
-sealed interface PlayerUiState {
+internal sealed interface PlayerUiState {
     data object Loading : PlayerUiState
     data class Success(
         val currentTrack: Track? = null,

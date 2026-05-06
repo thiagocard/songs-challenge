@@ -1,6 +1,7 @@
 package com.songs.home.presentation.ui.album
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,9 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import com.songs.core.ui.components.AlbumItemComponent
 import com.songs.core.ui.components.AppHeader
 import com.songs.core.ui.components.MediaItemComponentStyle
@@ -34,6 +37,7 @@ import com.songs.core.ui.screen.LoadingScreen
 import com.songs.core.ui.theme.PhonePreviews
 import com.songs.core.ui.theme.TabletPreviews
 import com.songs.core.ui.theme.ThemePreview
+import com.songs.core.ui.transition.LocalSharedTransitionScope
 import com.songs.core.ui.util.isLargeScreen
 import com.songs.feature.home.R
 import com.songs.home.domain.model.AlbumWithSongs
@@ -126,19 +130,58 @@ internal fun Screen(
             count = state.albumWithSongs.songs.size
         ) { index ->
             val song = state.albumWithSongs.songs[index]
+            val trackId = song.trackId
+
+            val isPreview = LocalInspectionMode.current
+            val sharedTransitionScope = LocalSharedTransitionScope.current
+            val animatedContentScope = if (!isPreview) LocalNavAnimatedContentScope.current else null
+            val useSharedElements = trackId != null && !isPreview && sharedTransitionScope != null && animatedContentScope != null
+
+            @OptIn(ExperimentalSharedTransitionApi::class)
+            val artworkModifier = if (useSharedElements) {
+                with(sharedTransitionScope!!) {
+                    Modifier.sharedElement(
+                        sharedContentState = rememberSharedContentState(key = "song_artwork_$trackId"),
+                        animatedVisibilityScope = animatedContentScope!!,
+                    )
+                }
+            } else Modifier
+
+            @OptIn(ExperimentalSharedTransitionApi::class)
+            val titleModifier = if (useSharedElements) {
+                with(sharedTransitionScope!!) {
+                    Modifier.sharedElement(
+                        sharedContentState = rememberSharedContentState(key = "song_title_$trackId"),
+                        animatedVisibilityScope = animatedContentScope!!,
+                    )
+                }
+            } else Modifier
+
+            @OptIn(ExperimentalSharedTransitionApi::class)
+            val subtitleModifier = if (useSharedElements) {
+                with(sharedTransitionScope!!) {
+                    Modifier.sharedElement(
+                        sharedContentState = rememberSharedContentState(key = "song_artist_$trackId"),
+                        animatedVisibilityScope = animatedContentScope!!,
+                    )
+                }
+            } else Modifier
 
             SongItemComponent(
                 title = song.trackName,
                 subtitle = song.artistName,
                 artworkUrl = song.artworkUrl100,
                 showNavOption = false,
+                artworkModifier = artworkModifier,
+                titleModifier = titleModifier,
+                subtitleModifier = subtitleModifier,
                 onClick = {
-                    song.trackId?.let { trackId ->
+                    trackId?.let { safeTrackId ->
                         val allTrackIds = state.albumWithSongs.songs
                             .toMutableList()
                             .apply { remove(song) }
                             .mapNotNull { it.trackId }
-                        onNavigateToPlayer(allTrackIds, trackId)
+                        onNavigateToPlayer(allTrackIds, safeTrackId)
                     }
                 }
             )

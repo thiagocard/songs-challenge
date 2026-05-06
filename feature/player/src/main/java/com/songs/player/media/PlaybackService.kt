@@ -3,6 +3,7 @@ package com.songs.player.media
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
+import com.songs.common.playback.NowPlayingProvider
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -11,6 +12,8 @@ class PlaybackService : MediaSessionService() {
 
     @Inject
     lateinit var exoPlayer: ExoPlayer
+
+    @Inject lateinit var nowPlayingProvider: NowPlayingProvider
 
     private var mediaSession: MediaSession? = null
 

@@ -12,13 +12,14 @@ import androidx.compose.material3.SnackbarHostState
 import com.songs.feature.player.R
 import com.songs.navigation.route.PlayerRoute
 import com.songs.player.presentation.ui.PlayerScreen
+import com.songs.player.presentation.ui.PlayerSideEffect
 import com.songs.player.presentation.ui.PlayerViewModel
 import kotlinx.coroutines.flow.collectLatest
 
-fun EntryProviderScope<NavKey>.playerScreen(
+fun EntryProviderScope<NavKey>.playerRoute(
     onNavigateUp: () -> Unit,
     onNavigateToAlbum: (String) -> Unit,
-    onRouteChanged: (trackIds: List<Long>, currentTrackId: Long) -> Unit,
+    onNavigateToPlayer: (trackIds: List<Long>, currentTrackId: Long, shouldPlay: Boolean) -> Unit,
 ) {
     entry<PlayerRoute>(clazzContentKey = { PlayerRoute.Key }) { route ->
         val viewModel: PlayerViewModel = hiltViewModel()
@@ -26,7 +27,6 @@ fun EntryProviderScope<NavKey>.playerScreen(
         val playbackErrorMessage = stringResource(R.string.error_playback)
 
         LaunchedEffect(route.trackIds, route.currentTrackId) {
-            onRouteChanged(route.trackIds, route.currentTrackId)
             if (route.shouldPlay) {
                 viewModel.requestPlay(route.currentTrackId)
             }
@@ -36,6 +36,16 @@ fun EntryProviderScope<NavKey>.playerScreen(
         LaunchedEffect(Unit) {
             viewModel.playbackError.collectLatest {
                 snackbarHostState.showSnackbar(message = playbackErrorMessage)
+            }
+        }
+
+        LaunchedEffect(Unit) {
+            viewModel.events.collectLatest { event ->
+                when (event) {
+                    is PlayerSideEffect.NavigateToPlayer -> {
+                        onNavigateToPlayer(event.trackIds, event.currentTrackId, true)
+                    }
+                }
             }
         }
 
@@ -49,7 +59,7 @@ fun EntryProviderScope<NavKey>.playerScreen(
             snackbarHostState = snackbarHostState,
             onNavigateUp = onNavigateUp,
             onNavigateToAlbum = onNavigateToAlbum,
-            onTrackClick = viewModel::playTrack,
+            onTrackClick = viewModel::onPlaylistTrackClick,
             onPlayPauseClick = viewModel::togglePlayPause,
             onRewindClick = viewModel::previousTrack,
             onForwardClick = viewModel::nextTrack,

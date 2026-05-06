@@ -21,12 +21,12 @@ class FakeMediaPlayer : MediaPlayer {
     var lastLoadedUrl: String? = null
     var lastLoadedTrackId: Long? = null
 
-    fun emitState(newState: MediaPlayerState) {
-        _state.value = newState
+    fun setCurrentTrackId(trackId: Long?) {
+        _state.value = _state.value.copy(currentTrackId = trackId)
     }
 
-    fun emitPlaybackError() {
-        _playbackErrors.tryEmit(Unit)
+    fun emitState(newState: MediaPlayerState) {
+        _state.value = newState
     }
 
     fun resetCalls() {
@@ -37,11 +37,24 @@ class FakeMediaPlayer : MediaPlayer {
         lastLoadedTrackId = null
     }
 
-    override fun loadMedia(url: String, trackId: Long?, title: String?, artist: String?, artworkUri: String?) {
+    override fun loadMedia(
+        url: String,
+        trackId: Long?,
+        title: String?,
+        artist: String?,
+        artworkUri: String?,
+        trackIds: List<Long>,
+    ) {
         loadMediaCalled = true
         lastLoadedUrl = url
         lastLoadedTrackId = trackId
-        _state.value = _state.value.copy(currentTrackId = trackId)
+        _state.value = _state.value.copy(
+            currentTrackId = trackId,
+            trackTitle = title,
+            artistName = artist,
+            artworkUrl = artworkUri,
+            trackIds = trackIds,
+        )
     }
 
     override fun play() {

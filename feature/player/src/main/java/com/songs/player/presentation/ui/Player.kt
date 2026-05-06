@@ -70,12 +70,13 @@ internal fun Player(
         }
 
         is PlayerUiState.Success -> {
+            val sharedTrackId = uiState.currentTrack?.trackId ?: currentTrackId
             InternalPlayer(
                 modifier = modifier,
                 onNavigateUp = onNavigateUp,
                 onNavigateToAlbum = onNavigateToAlbum,
                 uiState = uiState,
-                currentTrackId = currentTrackId,
+                currentTrackId = sharedTrackId,
                 onSliderPositionChange = onSliderPositionChange,
                 onPlayPauseClick = onPlayPauseClick,
                 onRewindClick = onRewindClick,

@@ -11,6 +11,7 @@ import androidx.media3.datasource.cache.SimpleCache
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import com.songs.common.coroutine.DispatcherProvider
+import com.songs.common.playback.NowPlayingProvider
 import com.songs.player.data.TrackRepository
 import com.songs.player.data.TrackRepositoryImpl
 import com.songs.player.data.remote.PlayerRemoteDataSource
@@ -19,6 +20,7 @@ import com.songs.player.domain.usecase.GetTrackByIdUseCase
 import com.songs.player.domain.usecase.GetTrackByIdUseCaseImpl
 import com.songs.player.media.MediaPlayer
 import com.songs.player.media.MediaPlayerImpl
+import com.songs.player.playback.MediaPlayerNowPlayingProvider
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -28,7 +30,7 @@ import dagger.hilt.components.SingletonComponent
 import java.io.File
 import javax.inject.Singleton
 
-private const val AUDIO_CACHE_SIZE_BYTES = 200L * 1024 * 1024 // 200 MB
+private const val AUDIO_CACHE_SIZE_BYTES = 50L * 1024 * 1024 // 50 MB
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -45,6 +47,12 @@ internal abstract class PlayerModule {
     @Binds
     @Singleton
     abstract fun bindGetTrackByIdUseCase(impl: GetTrackByIdUseCaseImpl): GetTrackByIdUseCase
+
+    @Binds
+    @Singleton
+    abstract fun bindNowPlayingProvider(
+        impl: MediaPlayerNowPlayingProvider
+    ): NowPlayingProvider
 
     companion object {
         @OptIn(UnstableApi::class)

@@ -5,6 +5,7 @@ import assertk.assertThat
 import assertk.assertions.isFalse
 import assertk.assertions.isEqualTo
 import assertk.assertions.isTrue
+import com.songs.player.FakeNowPlayingProvider
 import com.songs.player.TestCoroutineRule
 import com.songs.player.media.MediaPlayerState
 import com.songs.player.presentation.ui.FakeMediaPlayer
@@ -22,12 +23,14 @@ class MiniPlayerViewModelTest {
     val coroutineRule = TestCoroutineRule()
 
     private lateinit var fakeMediaPlayer: FakeMediaPlayer
+    private lateinit var nowPlayingProvider: FakeNowPlayingProvider
     private lateinit var viewModel: MiniPlayerViewModel
 
     @Before
     fun setUp() {
         fakeMediaPlayer = FakeMediaPlayer()
-        viewModel = MiniPlayerViewModel(fakeMediaPlayer)
+        nowPlayingProvider = FakeNowPlayingProvider()
+        viewModel = MiniPlayerViewModel(fakeMediaPlayer, nowPlayingProvider)
     }
 
     @Test
@@ -42,7 +45,7 @@ class MiniPlayerViewModelTest {
     fun `given media player emits trackTitle and artistName, when uiState collected, then uiState becomes visible and maps title and artist`() = runTest(coroutineRule.dispatcher) {
         viewModel.uiState.test {
             skipItems(1) // Skip initial state
-            fakeMediaPlayer.emitState(MediaPlayerState(trackTitle = "Song", artistName = "Artist", isPlaying = true))
+            nowPlayingProvider.emit(com.songs.common.playback.NowPlaying(1L, "Song", "Artist", null, emptyList()))
             advanceUntilIdle()
 
             val state = awaitItem()
@@ -57,7 +60,7 @@ class MiniPlayerViewModelTest {
     fun `given media player state with isPlaying true, when uiState collected, then uiState isPlaying is true`() = runTest(coroutineRule.dispatcher) {
         viewModel.uiState.test {
             skipItems(1) // Skip initial state
-            fakeMediaPlayer.emitState(MediaPlayerState(trackTitle = "Song", isPlaying = true))
+            fakeMediaPlayer.emitState(MediaPlayerState(isPlaying = true))
             advanceUntilIdle()
 
             assertThat(awaitItem().isPlaying).isTrue()
@@ -69,8 +72,7 @@ class MiniPlayerViewModelTest {
     fun `given track route with trackIds and currentTrackId, when updatePlayerRoute invoked and state emitted, then uiState stores trackIds and currentTrackId`() = runTest(coroutineRule.dispatcher) {
         viewModel.uiState.test {
             skipItems(1) // Skip initial state
-            viewModel.updatePlayerRoute(listOf(1L, 2L, 3L), currentTrackId = 2L)
-            fakeMediaPlayer.emitState(MediaPlayerState(trackTitle = "Song"))
+            nowPlayingProvider.emit(com.songs.common.playback.NowPlaying(2L, "Song", "Artist", null, listOf(1L, 2L, 3L)))
             advanceUntilIdle()
 
             val state = awaitItem()
