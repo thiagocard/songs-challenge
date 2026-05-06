@@ -41,6 +41,7 @@ material3-adaptive = "1.2.0"
 media3 = "1.10.0"
 androidx-splashscreen = "1.2.0"
 room = "2.8.4"
+kover = "0.9.8"
 
 
 [libraries]
@@ -139,6 +140,7 @@ media3-session = { group = "androidx.media3", name = "media3-session", version.r
 media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
 media3-datasource = { group = "androidx.media3", name = "media3-datasource", version.ref = "media3" }
 media3-database = { group = "androidx.media3", name = "media3-database", version.ref = "media3" }
+kover-gradle-plugin = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover" }
 
 [bundles]
 compose = ["compose-ui", "compose-icons", "compose-material3", "compose-paging", "compose-lifecycle", "compose-activity", "compose-ui-tooling"]
@@ -162,3 +164,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 songs-android-library = { id = "com.songs.android-library" }
 songs-application = { id = "com.songs.application" }
 songs-compose = { id = "com.songs.compose" }
+kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }

@@ -12,7 +12,12 @@ jobs:
   test:
     name: Run Gradle Tests
     runs-on: ubuntu-latest
-    
+
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,5 +32,26 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Run Tests
-        run: ./gradlew test
+      - name: Run Tests and Generate Coverage
+        run: ./gradlew test koverXmlReport
+
+      - name: Upload Coverage XML Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kover-coverage-reports
+          path: |
+            build/reports/kover/report.xml
+            **/build/reports/kover/report.xml
+
+      - name: Generate Per-Module Coverage Table
+        if: always()
+        run: python3 scripts/coverage_report.py --output coverage_table.md
+
+      - name: Post Coverage Comment on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: always() && github.event_name == 'pull_request'
+        with:
+          header: kover-coverage
+          path: coverage_table.md
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
