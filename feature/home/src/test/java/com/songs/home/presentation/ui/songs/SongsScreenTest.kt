@@ -10,15 +10,15 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithText
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.LoadState
-import androidx.paging.LoadStates
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -29,8 +29,8 @@ import com.songs.support.mock.SongMock
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -162,18 +162,6 @@ class SongsScreenTest {
     }
 
     @Test
-    fun `initial composition resets to default results`() {
-        var resetCalls = 0
-
-        composeTestRule.setSongsScreenContent(
-            pagingDataFlow = successPagingFlow(items = songs),
-            onResetToDefault = { resetCalls++ },
-        )
-        composeTestRule.awaitPagingIdle()
-        assertEquals(1, resetCalls)
-    }
-
-    @Test
     fun `shows append loading indicator when more pages are loading`() {
         composeTestRule.setSongsScreenContent(
             pagingDataFlow = flowOf(
@@ -270,7 +258,6 @@ private fun ComposeContentTestRule.setSongsScreenContent(
                     searchTerm = searchTerm,
                     pagingItems = pagingItems,
                     onSearchTermChanged = onSearchTermChanged,
-                    onResetToDefault = onResetToDefault,
                     onNavigateToAlbum = onNavigateToAlbum,
                     onSongClick = onSongClick,
                 )

@@ -1,5 +1,6 @@
 package com.songs.home.navigation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -16,6 +17,10 @@ fun EntryProviderScope<NavKey>.albumRoute(
     entry<AlbumRoute>(
         clazzContentKey = { AlbumRoute.Key },
     ) { route ->
+        BackHandler {
+            onNavigateUp()
+        }
+
         val viewModel = hiltViewModel<AlbumViewModel, AlbumViewModel.Factory>(
             creationCallback = { factory -> factory.create(route.albumId) },
             key = route.albumId,

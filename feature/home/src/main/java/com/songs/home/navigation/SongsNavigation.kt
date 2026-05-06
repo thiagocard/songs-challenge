@@ -36,7 +36,6 @@ fun EntryProviderScope<NavKey>.songsRoute(
             searchTerm = uiState.searchTerm,
             pagingItems = pagingItems,
             onSearchTermChanged = viewModel::onSearchTermChanged,
-            onResetToDefault = viewModel::resetToDefault,
             onNavigateToAlbum = onNavigateToAlbum,
             onSongClick = { song -> viewModel.onSongClick(song, pagingItems) },
             nowPlayingTrackId = uiState.nowPlayingTrackId,

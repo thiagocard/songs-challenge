@@ -1,14 +1,15 @@
 package com.songs.player.navigation
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-import androidx.compose.material3.SnackbarHostState
 import com.songs.feature.player.R
 import com.songs.navigation.route.PlayerRoute
 import com.songs.player.presentation.ui.PlayerScreen
@@ -22,6 +23,10 @@ fun EntryProviderScope<NavKey>.playerRoute(
     onNavigateToPlayer: (trackIds: List<Long>, currentTrackId: Long, shouldPlay: Boolean) -> Unit,
 ) {
     entry<PlayerRoute>(clazzContentKey = { PlayerRoute.Key }) { route ->
+        BackHandler {
+            onNavigateUp()
+        }
+
         val viewModel: PlayerViewModel = hiltViewModel()
         val snackbarHostState = remember { SnackbarHostState() }
         val playbackErrorMessage = stringResource(R.string.error_playback)

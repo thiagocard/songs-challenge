@@ -15,6 +15,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import com.songs.common.playback.NowPlaying
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MiniPlayerViewModelTest {
@@ -45,7 +46,7 @@ class MiniPlayerViewModelTest {
     fun `given media player emits trackTitle and artistName, when uiState collected, then uiState becomes visible and maps title and artist`() = runTest(coroutineRule.dispatcher) {
         viewModel.uiState.test {
             skipItems(1) // Skip initial state
-            nowPlayingProvider.emit(com.songs.common.playback.NowPlaying(1L, "Song", "Artist", null, emptyList()))
+            nowPlayingProvider.emit(NowPlaying(1L, "Song", "Artist", null, emptyList()))
             advanceUntilIdle()
 
             val state = awaitItem()
@@ -72,7 +73,7 @@ class MiniPlayerViewModelTest {
     fun `given track route with trackIds and currentTrackId, when updatePlayerRoute invoked and state emitted, then uiState stores trackIds and currentTrackId`() = runTest(coroutineRule.dispatcher) {
         viewModel.uiState.test {
             skipItems(1) // Skip initial state
-            nowPlayingProvider.emit(com.songs.common.playback.NowPlaying(2L, "Song", "Artist", null, listOf(1L, 2L, 3L)))
+            nowPlayingProvider.emit(NowPlaying(2L, "Song", "Artist", null, listOf(1L, 2L, 3L)))
             advanceUntilIdle()
 
             val state = awaitItem()

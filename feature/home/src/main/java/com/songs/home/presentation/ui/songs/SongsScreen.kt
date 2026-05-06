@@ -62,7 +62,6 @@ internal fun SongsScreen(
     searchTerm: String,
     pagingItems: LazyPagingItems<Song>,
     onSearchTermChanged: (String) -> Unit,
-    onResetToDefault: () -> Unit,
     onNavigateToAlbum: (String) -> Unit,
     onSongClick: (Song) -> Unit,
     nowPlayingTrackId: Long? = null,
@@ -70,13 +69,6 @@ internal fun SongsScreen(
     var searchTextFieldValue by remember { mutableStateOf(TextFieldValue(searchTerm)) }
     var isSearchActive by remember { mutableStateOf(false) }
 
-    // When search is dismissed, clear the field and revert to default results
-    LaunchedEffect(isSearchActive) {
-        if (!isSearchActive) {
-            searchTextFieldValue = TextFieldValue("")
-            onResetToDefault()
-        }
-    }
 
     val isRefreshing =
         pagingItems.loadState.refresh is LoadState.Loading && pagingItems.itemCount > 0

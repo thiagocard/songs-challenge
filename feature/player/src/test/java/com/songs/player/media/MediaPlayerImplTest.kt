@@ -15,6 +15,7 @@ import assertk.assertions.isTrue
 import com.google.common.util.concurrent.ListenableFuture
 import com.songs.common.coroutine.DispatcherProvider
 import com.songs.player.TestCoroutineRule
+import io.mockk.CapturingSlot
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -45,8 +46,8 @@ class MediaPlayerImplTest {
     private lateinit var context: Context
     private lateinit var controller: MediaController
     private lateinit var future: ListenableFuture<MediaController>
-    private lateinit var listenerSlot: io.mockk.CapturingSlot<Player.Listener>
-    private lateinit var mediaItemSlot: io.mockk.CapturingSlot<MediaItem>
+    private lateinit var listenerSlot: CapturingSlot<Player.Listener>
+    private lateinit var mediaItemSlot: CapturingSlot<MediaItem>
     private lateinit var player: MediaPlayerImpl
 
     @Before
