@@ -32,7 +32,7 @@ fun NavigationGraph(
 ) {
     val backStack = rememberNavBackStack(startKey)
     val miniPlayerViewModel: MiniPlayerViewModel = hiltViewModel()
-    val isPlayerVisible = backStack.any { it is PlayerRoute }
+    val isPlayerVisible = backStack.lastOrNull() is PlayerRoute || backStack.lastOrNull() is SplashRoute
 
     fun navigateToPlayer(trackIds: List<Long>, currentTrackId: Long, shouldPlay: Boolean = true) {
         val playerRoute = PlayerRoute(trackIds, currentTrackId, shouldPlay)
