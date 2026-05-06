@@ -2,6 +2,8 @@
 
 This project is an Android application demonstrating modern Android development practices, focusing on a modular architecture, Jetpack Compose for UI, and efficient data handling. It functions as a music browsing and playback application.
 
+Hope you enjoy it - because I had a great time building it! Feel free to explore the codebase and provide feedback.
+
 ## Screenshots
 
 ### Phone
