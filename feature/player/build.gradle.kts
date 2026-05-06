@@ -41,6 +41,7 @@ dependencies {
     implementation(libs.compose.material3.adaptive.navigation)
 
     testImplementation(libs.bundles.test)
+    testImplementation(libs.ktor.client.mock)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.compose.ui.test.junit4)

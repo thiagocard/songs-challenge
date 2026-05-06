@@ -24,4 +24,5 @@ dependencies {
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)
     testImplementation(libs.bundles.test)
+    testImplementation(libs.ktor.client.mock)
 }
