@@ -9,10 +9,8 @@ plugins {
 }
 
 android {
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
+    buildFeatures.compose = true
+    buildFeatures.buildConfig = true
 
     packaging {
         resources {
