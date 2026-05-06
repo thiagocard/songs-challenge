@@ -31,6 +31,8 @@ This project is an Android application demonstrating modern Android development 
 
 ## Architecture
 
+![App Modular Architecture](screenshot/app_modular_architecture.png)
+
 The project follows a clean, modular architecture to promote separation of concerns, scalability, and maintainability. It is structured into several Gradle modules:
 
 *   **`:app`**: The main application module, responsible for assembling the features and setting up the overall application graph.
