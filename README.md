@@ -2,6 +2,27 @@
 
 This project is an Android application demonstrating modern Android development practices, focusing on a modular architecture, Jetpack Compose for UI, and efficient data handling. It functions as a music browsing and playback application.
 
+## Screenshots
+
+### Phone
+![Phone Screen 1](screenshot/Screenshot_20260505_224730.png)
+![Phone Screen 2](screenshot/Screenshot_20260505_224744.png)
+![Phone Screen 3](screenshot/Screenshot_20260505_224753.png)
+
+### Foldable
+![Foldable Screen 1](screenshot/Screenshot_20260505_224837.png)
+![Foldable Screen 2](screenshot/Screenshot_20260505_224848.png)
+![Foldable Screen 3](screenshot/Screenshot_20260505_224908.png)
+
+### Tablet Portrait
+![Tablet Portrait Screen 1](screenshot/Screenshot_20260505_224945.png)
+![Tablet Portrait Screen 2](screenshot/Screenshot_20260505_224951.png)
+![Tablet Portrait Screen 3](screenshot/Screenshot_20260505_225012.png)
+
+### Tablet (Landscape)
+![Tablet Landscape Screen](screenshot/Screenshot_20260505_224955.png)
+
+
 ## Bonus Features
 
 *   **Error/States handling**: The app gracefully handles various states such as loading, empty results, and error scenarios, providing appropriate feedback to the user.
