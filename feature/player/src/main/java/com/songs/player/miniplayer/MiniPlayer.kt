@@ -50,7 +50,6 @@ fun MiniPlayer(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface)
-                .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
                 .clickable { onNavigateToPlayer(uiState.trackIds, uiState.currentTrackId) }
                 .windowInsetsPadding(WindowInsets.navigationBars),
         ) {

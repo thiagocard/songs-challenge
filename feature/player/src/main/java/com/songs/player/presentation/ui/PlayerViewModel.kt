@@ -318,9 +318,4 @@ internal class PlayerViewModel @Inject constructor(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        // Do NOT release the MediaPlayerWrapper here; playback should continue
-        // in the background (visible via the mini player).
-    }
 }
