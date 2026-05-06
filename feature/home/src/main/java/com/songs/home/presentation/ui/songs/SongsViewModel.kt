@@ -90,15 +90,29 @@ internal class SongsViewModel @Inject constructor(
         song: Song,
         pagingItems: LazyPagingItems<Song>,
     ) {
+        onSongClick(
+            song = song,
+            snapshot = pagingItems.itemSnapshotList,
+            itemCount = pagingItems.itemCount,
+            peek = pagingItems::peek,
+        )
+    }
+
+    @Suppress("VisibleForTests")
+    internal fun onSongClick(
+        song: Song,
+        snapshot: Iterable<Song?>,
+        itemCount: Int,
+        peek: (Int) -> Song?,
+    ) {
         val currentTrackId = song.trackId ?: return
 
         viewModelScope.launch {
-            val currentIndex = pagingItems.itemSnapshotList
-                .indexOfFirst { it?.trackId == currentTrackId }
+            val currentIndex = snapshot.indexOfFirst { it?.trackId == currentTrackId }
             if (currentIndex < 0) return@launch
 
-            val trackIds = (0 until pagingItems.itemCount)
-                .mapNotNull { pagingItems.peek(it)?.trackId }
+            val trackIds = (0 until itemCount)
+                .mapNotNull { peek(it)?.trackId }
                 .ifEmpty { listOf(currentTrackId) }
 
             _events.emit(SongsSideEffect.NavigateToPlayer(trackIds, currentTrackId))
