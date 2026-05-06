@@ -17,9 +17,6 @@ import androidx.navigation3.ui.NavDisplay
 import com.songs.core.ui.transition.LocalSharedTransitionScope
 import com.songs.home.navigation.albumRoute
 import com.songs.home.navigation.songsRoute
-import com.songs.navigation.route.AlbumRoute
-import com.songs.navigation.route.HomeRoute
-import com.songs.navigation.route.PlayerRoute
 import com.songs.navigation.route.SplashRoute
 import com.songs.player.miniplayer.MiniPlayer
 import com.songs.player.miniplayer.MiniPlayerViewModel
@@ -31,15 +28,8 @@ fun NavigationGraph(
     startKey: NavKey = SplashRoute,
 ) {
     val backStack = rememberNavBackStack(startKey)
+    val navigationHandler = rememberNavigationHandler(backStack)
     val miniPlayerViewModel: MiniPlayerViewModel = hiltViewModel()
-    val isPlayerVisible = backStack.lastOrNull() is PlayerRoute || backStack.lastOrNull() is SplashRoute
-
-    fun navigateToPlayer(trackIds: List<Long>, currentTrackId: Long, shouldPlay: Boolean = true) {
-        val playerRoute = PlayerRoute(trackIds, currentTrackId, shouldPlay)
-        val existingIndex = backStack.indexOfFirst { it is PlayerRoute }
-        if (existingIndex >= 0) backStack.removeAt(existingIndex)
-        backStack.add(playerRoute)
-    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -49,8 +39,8 @@ fun NavigationGraph(
         // bottom padding for all screen content — no screen can render behind it.
         bottomBar = {
             MiniPlayer(
-                isPlayerScreenVisible = isPlayerVisible,
-                onNavigateToPlayer = ::navigateToPlayer,
+                isPlayerScreenVisible = navigationHandler.isPlayerVisible,
+                onNavigateToPlayer = navigationHandler::navigateToPlayer,
                 viewModel = miniPlayerViewModel,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -63,28 +53,27 @@ fun NavigationGraph(
                     // Only apply the bottom padding (= MiniPlayer height) — top insets are handled
                     // by each screen's own Scaffold, so we must not double-apply them here.
                     modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
-                    onBack = { backStack.removeLastOrNull() },
+                    onBack = { navigationHandler.navigateUp() },
                     entryProvider = entryProvider {
                         entry<SplashRoute> {
                             SplashScreen(
                                 onAnimationFinished = {
-                                    backStack.removeLastOrNull() // remove SplashRoute
-                                    backStack.add(HomeRoute)
+                                    navigationHandler.removeSplashAndGoToHome()
                                 }
                             )
                         }
                         songsRoute(
-                            onNavigateToAlbum = { albumId -> backStack.add(AlbumRoute(albumId)) },
-                            onNavigateToPlayer = ::navigateToPlayer,
+                            onNavigateToAlbum = navigationHandler::navigateToAlbum,
+                            onNavigateToPlayer = navigationHandler::navigateToPlayer,
                         )
                         albumRoute(
-                            onNavigateUp = { backStack.removeLastOrNull() },
-                            onNavigateToPlayer = ::navigateToPlayer
+                            onNavigateUp = navigationHandler::navigateUp,
+                            onNavigateToPlayer = navigationHandler::navigateToPlayer
                         )
                         playerRoute(
-                            onNavigateUp = { backStack.removeLastOrNull() },
-                            onNavigateToAlbum = { albumId -> backStack.add(AlbumRoute(albumId)) },
-                            onNavigateToPlayer = ::navigateToPlayer
+                            onNavigateUp = navigationHandler::navigateUp,
+                            onNavigateToAlbum = navigationHandler::navigateToAlbum,
+                            onNavigateToPlayer = navigationHandler::navigateToPlayer
                         )
                     }
                 )
